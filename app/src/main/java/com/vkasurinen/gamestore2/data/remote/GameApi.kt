@@ -1,6 +1,7 @@
 package com.vkasurinen.gamestore2.data.remote
 
 import com.vkasurinen.gamestore2.data.remote.response.GameListDto
+import com.vkasurinen.gamestore2.data.remote.response.GenreListDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,11 +14,11 @@ interface GameApi {
         @Query("page_size") pageSize: Int = 10
     ): GameListDto
 
-    /*@GET("genres")
+    @GET("genres")
     suspend fun getAllGenres(
         @Query("key") apiKey: String = API_KEY
     ): GenreListDto
-     */
+
 
     @GET("games")
     suspend fun getGamesByGenre(

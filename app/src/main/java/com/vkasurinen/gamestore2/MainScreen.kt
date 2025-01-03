@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListUiEvent
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
 import com.vkasurinen.gamestore2.presentation.gamelist.GameScreenRoot
+import com.vkasurinen.gamestore2.presentation.gamelist.GenreScreenRoot
 import com.vkasurinen.gamestore2.util.Screen
 import org.koin.androidx.compose.koinViewModel
 
@@ -82,7 +83,7 @@ fun MainScreen(navController: NavHostController) {
                     )
                 }
                 composable(Screen.GameList.route) {
-                    GameScreenRoot(
+                    GenreScreenRoot(
                         navController = navController,
                         viewModel = gameListViewModel
                     )
