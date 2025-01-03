@@ -5,6 +5,7 @@ import com.vkasurinen.gamestore2.data.local.GameDatabase
 import com.vkasurinen.gamestore2.data.remote.GameApi
 import com.vkasurinen.gamestore2.data.repository.GameListRepositoryImpl
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
+import com.vkasurinen.gamestore2.presentation.details.DetailsViewModel
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -44,4 +45,5 @@ val appModule = module {
     single<GameListRepository> { GameListRepositoryImpl(get(), get()) }
 
     viewModel { GameListViewModel(get()) }
+    viewModel { DetailsViewModel(get(), get()) }
 }

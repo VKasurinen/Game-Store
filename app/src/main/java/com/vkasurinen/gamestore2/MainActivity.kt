@@ -16,11 +16,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
+import com.vkasurinen.gamestore2.presentation.details.DetailsScreen
+import com.vkasurinen.gamestore2.presentation.details.DetailsScreenRoot
 import com.vkasurinen.gamestore2.ui.theme.GameStore2Theme
 import com.vkasurinen.gamestore2.util.Resource
 import com.vkasurinen.gamestore2.util.Screen
@@ -47,14 +51,14 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Main.route) {
                             MainScreen(navController)
                         }
-                        // composable(
-                        //     Screen.Details.route + "/{gameId}",
-                        //     arguments = listOf(
-                        //         navArgument("gameId") { type = NavType.IntType }
-                        //     )
-                        // ) { backStackEntry ->
-                        //     DetailsScreen()
-                        // }
+                         composable(
+                             Screen.Details.route + "/{gameId}",
+                             arguments = listOf(
+                                 navArgument("gameId") { type = NavType.IntType }
+                             )
+                         ) { backStackEntry ->
+                             DetailsScreenRoot()
+                         }
                     }
                 }
             }
