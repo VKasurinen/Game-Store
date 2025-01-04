@@ -3,6 +3,7 @@ package com.vkasurinen.gamestore2.presentation.genrelist
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,26 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.vkasurinen.gamestore2.presentation.components.GameItem
-import com.vkasurinen.gamestore2.presentation.gamelist.GameListState
-import com.vkasurinen.gamestore2.presentation.gamelist.GameListUiEvent
-import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
+import com.vkasurinen.gamestore2.presentation.components.GenreItem
 import org.koin.androidx.compose.koinViewModel
-
-
-//TEE GAMELISTREPOSITORYYN ETTÄ HAKEE GENRET JA SITTE VIEWMODELIIN MYÖS
-
 
 @Composable
 fun GenreScreenRoot(
     navController: NavHostController,
-    viewModel: GameListViewModel = koinViewModel(),
+    viewModel: GenreListViewModel = koinViewModel(),
 ) {
-    val state = viewModel.gameListState.collectAsState().value
+    val state = viewModel.genreListState.collectAsState().value
     GenreScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                is GameListUiEvent.Navigate -> {
+                is GenreListUiEvent.Navigate -> {
                     // Handle navigation action
                 }
                 else -> Unit
@@ -43,8 +38,8 @@ fun GenreScreenRoot(
 
 @Composable
 private fun GenreScreen(
-    state: GameListState,
-    onAction: (GameListUiEvent) -> Unit,
+    state: GenreListState,
+    onAction: (GenreListUiEvent) -> Unit,
     navHostController: NavHostController
 ) {
     if (state.isLoading) {
@@ -61,17 +56,11 @@ private fun GenreScreen(
             contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
         ) {
             items(state.genreList.size) { index ->
-                GameItem(
-                    game = state.genreList[index],
+                GenreItem(
+                    genre = state.genreList[index],
                     navHostController = navHostController
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-
-                /*if (index >= state.genreList.size - 1 && !state.isLoading) {
-                    onAction(GameListUiEvent.Paginate)
-                }
-
-                 */
             }
         }
     }

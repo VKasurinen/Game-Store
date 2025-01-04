@@ -11,7 +11,7 @@ interface GameApi {
     suspend fun getGamesList(
         @Query("key") apiKey: String = API_KEY,
         @Query("page") page: Int,
-        @Query("page_size") pageSize: Int = 10
+        @Query("page_size") pageSize: Int = 30
     ): GameListDto
 
     @GET("genres")
@@ -25,7 +25,7 @@ interface GameApi {
         @Query("key") apiKey: String = API_KEY,
         @Query("genres") genre: String,
         @Query("page") page: Int,
-        @Query("page_size") pageSize: Int = 10
+        @Query("page_size") pageSize: Int = 30
     ): GameListDto
 
     companion object {

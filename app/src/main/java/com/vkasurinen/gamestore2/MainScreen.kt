@@ -8,15 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Gamepad
 import androidx.compose.material.icons.rounded.Category
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListUiEvent
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
 import com.vkasurinen.gamestore2.presentation.gamelist.GameScreenRoot
+import com.vkasurinen.gamestore2.presentation.genrelist.GenreListViewModel
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreScreenRoot
 import com.vkasurinen.gamestore2.util.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -43,7 +36,9 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreen(navController: NavHostController) {
 
     val gameListViewModel: GameListViewModel = koinViewModel()
+    val genreListViewModel: GenreListViewModel = koinViewModel()
     val gameListState = gameListViewModel.gameListState.collectAsState().value
+    //val genreListState = genreListViewModel.genreListState.collectAsState().value
     val bottomNavController = rememberNavController()
 
     Scaffold(bottomBar = {
@@ -85,7 +80,7 @@ fun MainScreen(navController: NavHostController) {
                 composable(Screen.GenreList.route) {
                     GenreScreenRoot(
                         navController = navController,
-                        viewModel = gameListViewModel
+                        viewModel = genreListViewModel
                     )
                 }
             }

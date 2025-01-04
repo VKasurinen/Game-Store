@@ -10,8 +10,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
-class GameListViewModel (
+class GameListViewModel(
     private val gameListRepository: GameListRepository
 ) : ViewModel() {
 
@@ -31,11 +30,9 @@ class GameListViewModel (
                     )
                 }
             }
-
             is GameListUiEvent.Paginate -> {
                 getGameList(true)
             }
-
             else -> {}
         }
     }
@@ -56,7 +53,6 @@ class GameListViewModel (
                             it.copy(isLoading = false)
                         }
                     }
-
                     is Resource.Success -> {
                         result.data?.let { gameList ->
                             _gameListState.update {
@@ -67,19 +63,14 @@ class GameListViewModel (
                             }
                         }
                     }
-
                     is Resource.Loading -> {
                         _gameListState.update {
                             it.copy(isLoading = result.isLoading)
                         }
                     }
-
                     else -> {}
                 }
             }
         }
     }
-
-
-
 }

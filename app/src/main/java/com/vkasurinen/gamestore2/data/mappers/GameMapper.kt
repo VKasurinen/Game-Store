@@ -10,26 +10,25 @@ import com.vkasurinen.gamestore2.domain.model.Genre
 
 fun GameDto.toGameEntity(): GameEntity {
     return GameEntity(
-        id = id,
-        slug = slug,
-        name = name,
-        genreId = genreId,
-        released = released,
+        id = id ?: -1,
+        slug = slug ?: "",
+        name = name ?: "",
+        genreId = genreId ?: 0,
+        released = released ?: "",
         tba = tba,
-        background_image = background_image,
-        rating = rating,
-        rating_top = rating_top,
-        ratings_count = ratings_count,
-        reviews_text_count = reviews_text_count,
-        added = added,
-        metacritic = metacritic,
-        playtime = playtime,
-        suggestions_count = suggestions_count,
-        updated = updated,
-        reviews_count = reviews_count,
-        saturated_color = saturated_color,
-        dominant_color = dominant_color,
-        //genres = genres.map { it.toGenreEntity() }
+        background_image = background_image ?: "",
+        rating = rating ?: 0.0,
+        ratingTop = rating_top ?: 0,
+        ratingsCount = ratings_count ?: 0,
+        reviewsTextCount = reviews_text_count ?: 0,
+        added = added ?: 0,
+        metacritic = metacritic ?: 0,
+        playtime = playtime ?: 0,
+        suggestionsCount = suggestions_count ?: 0,
+        updated = updated ?: "",
+        reviewsCount = reviews_count ?: 0,
+        saturatedColor = saturated_color ?: "",
+        dominantColor = dominant_color ?: ""
     )
 }
 
@@ -42,28 +41,27 @@ fun GameEntity.toGame(): Game {
         tba = tba,
         background_image = background_image,
         rating = rating,
-        ratingTop = rating_top,
-        ratingsCount = ratings_count,
-        reviewsTextCount = reviews_text_count,
+        ratingTop = ratingTop,
+        ratingsCount = ratingsCount,
+        reviewsTextCount = reviewsTextCount,
         added = added,
         metacritic = metacritic,
         playtime = playtime,
-        suggestionsCount = suggestions_count,
+        suggestionsCount = suggestionsCount,
         updated = updated,
-        reviewsCount = reviews_count,
-        saturatedColor = saturated_color,
-        dominantColor = dominant_color,
-        //genres = genres.map { it.toGenre() }
+        reviewsCount = reviewsCount,
+        saturatedColor = saturatedColor,
+        dominantColor = dominantColor
     )
 }
 
 fun GenreDto.toGenreEntity(): GenreEntity {
     return GenreEntity(
-        id = id,
-        name = name,
-        slug = slug,
-        games_count = games_count,
-        background_image = background_image,
+        id = id ?: 0,
+        name = name ?: "",
+        slug = slug ?: "",
+        games_count = games_count ?: 0,
+        background_image = background_image ?: "",
         games = games.map { it.toGameEntity() }
 
     )
