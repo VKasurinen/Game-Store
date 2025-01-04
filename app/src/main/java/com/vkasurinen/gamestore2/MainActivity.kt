@@ -34,6 +34,8 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val gameListRepository: GameListRepository by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -51,19 +53,47 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Main.route) {
                             MainScreen(navController)
                         }
-                         composable(
-                             Screen.Details.route + "/{gameId}",
-                             arguments = listOf(
-                                 navArgument("gameId") { type = NavType.IntType }
-                             )
-                         ) { backStackEntry ->
-                             DetailsScreenRoot()
-                         }
+//                        composable(
+//                            Screen.Details.route + "/{gameId}",
+//                            arguments = listOf(
+//                                navArgument("gameId") { type = NavType.IntType }
+//                            )
+//                        ) { backStackEntry ->
+//                            DetailsScreenRoot()
+//                        }
                     }
                 }
             }
         }
     }
+
+
+
+
+    private fun testGameListRepository() {
+        CoroutineScope(Dispatchers.IO).launch {
+            gameListRepository.getGameList(forceFetchFromRemote = true, page = 1).collect { resource ->
+                when (resource) {
+                    is Resource.Loading<*> -> {
+                        Log.d("MainActivity", "Loading data...")
+                    }
+                    is Resource.Success<*> -> {
+                        Log.d("MainActivity", "Data loaded successfully: ${resource.data}")
+                    }
+                    is Resource.Error<*> -> {
+                        Log.e("MainActivity", "Error loading data: ${resource.message}")
+                    }
+                    else -> {
+                        Log.e("MainActivity", "Unknown resource state")
+                    }
+                }
+            }
+        }
+
+        testGameListRepository()
+    }
+
+
 
     @Composable
     private fun SetBarColor(color: Color) {
@@ -74,29 +104,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
-
-
-//
-//    private fun testGameListRepository() {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            gameListRepository.getGameList(forceFetchFromRemote = true, page = 1).collect { resource ->
-//                when (resource) {
-//                    is Resource.Loading<*> -> {
-//                        Log.d("MainActivity", "Loading data...")
-//                    }
-//                    is Resource.Success<*> -> {
-//                        Log.d("MainActivity", "Data loaded successfully: ${resource.data}")
-//                    }
-//                    is Resource.Error<*> -> {
-//                        Log.e("MainActivity", "Error loading data: ${resource.message}")
-//                    }
-//                    else -> {
-//                        Log.e("MainActivity", "Unknown resource state")
-//                    }
-//                }
-//            }
-//        }
-//    }
 

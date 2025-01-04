@@ -8,6 +8,7 @@ data class GameEntity(
     @PrimaryKey val id: Int,
     val slug: String,
     val name: String,
+    val genreId: Int,
     val released: String,
     val tba: Boolean,
     val background_image: String,

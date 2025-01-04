@@ -6,8 +6,11 @@ import androidx.annotation.RequiresExtension
 import com.vkasurinen.gamestore2.data.local.GameDatabase
 import com.vkasurinen.gamestore2.data.mappers.toGame
 import com.vkasurinen.gamestore2.data.mappers.toGameEntity
+import com.vkasurinen.gamestore2.data.mappers.toGenre
+import com.vkasurinen.gamestore2.data.mappers.toGenreEntity
 import com.vkasurinen.gamestore2.data.remote.GameApi
 import com.vkasurinen.gamestore2.domain.model.Game
+import com.vkasurinen.gamestore2.domain.model.Genre
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
 import com.vkasurinen.gamestore2.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -91,6 +94,55 @@ class GameListRepositoryImpl(
 
             emit(Resource.Error("Error no such game"))
 
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun getAllGenres(forceFetchFromRemote: Boolean): Flow<Resource<List<Genre>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            val localGenreList = gameDatabase.genreDao.getAllGenres()
+
+            val shouldLoadLocalGenres = localGenreList.isNotEmpty() && !forceFetchFromRemote
+
+            if (shouldLoadLocalGenres) {
+                emit(Resource.Success(
+                    data = localGenreList.map { genreEntity ->
+                        genreEntity.toGenre()
+                    }
+                ))
+
+                emit(Resource.Loading(false))
+                return@flow
+            }
+
+            val genreListFromApi = try {
+                gameApi.getAllGenres()
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error loading genres"))
+                return@flow
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error loading genres"))
+                return@flow
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error loading genres"))
+                return@flow
+            }
+
+            val genreEntities = genreListFromApi.results.let {
+                it.map { genreDto ->
+                    genreDto.toGenreEntity()
+                }
+            }
+
+            gameDatabase.genreDao.upsertGenreList(genreEntities)
+
+            emit(Resource.Success(
+                genreEntities.map { it.toGenre() }
+            ))
             emit(Resource.Loading(false))
         }
     }

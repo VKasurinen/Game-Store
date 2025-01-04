@@ -9,5 +9,6 @@ data class GenreEntity(
     val name: String,
     val slug: String,
     val games_count: Int,
-    val background_image: String
+    val background_image: String,
+    val games: List<GameEntity>
 )

@@ -16,6 +16,7 @@ interface GameDao {
     @Query("SELECT * FROM GameEntity")
     suspend fun getAllGames(): List<GameEntity>
 
-    //vielä pitää korjata varmaankin että saadaan pelit kategorian mukaan
+    @Query("SELECT * FROM GameEntity WHERE genreId = :genreId")
+    suspend fun getGamesByGenre(genreId: Int): List<GameEntity>
 
 }

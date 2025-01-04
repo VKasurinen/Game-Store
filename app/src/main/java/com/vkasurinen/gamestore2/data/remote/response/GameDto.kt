@@ -4,6 +4,7 @@ data class GameDto(
     val id: Int,
     val slug: String,
     val name: String,
+    val genreId: Int,
     val released: String,
     val tba: Boolean,
     val background_image: String,
@@ -19,5 +20,5 @@ data class GameDto(
     val reviews_count: Int,
     val saturated_color: String,
     val dominant_color: String,
-    //val genres: List<GenreDto>,
+    val genres: List<GenreDto>,
 )

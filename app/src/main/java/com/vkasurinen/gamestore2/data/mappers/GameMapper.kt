@@ -13,6 +13,7 @@ fun GameDto.toGameEntity(): GameEntity {
         id = id,
         slug = slug,
         name = name,
+        genreId = genreId,
         released = released,
         tba = tba,
         background_image = background_image,
@@ -62,7 +63,9 @@ fun GenreDto.toGenreEntity(): GenreEntity {
         name = name,
         slug = slug,
         games_count = games_count,
-        background_image = background_image
+        background_image = background_image,
+        games = games.map { it.toGameEntity() }
+
     )
 }
 
@@ -72,6 +75,7 @@ fun GenreEntity.toGenre(): Genre {
         name = name,
         slug = slug,
         gamesCount = games_count,
-        background_image = background_image
+        background_image = background_image,
+        games = games.map { it.toGame() }
     )
 }

@@ -21,11 +21,3 @@ data class Game(
     val dominantColor: String,
     //val genres: List<Genre>,
 )
-
-data class Genre(
-    val id: Int,
-    val name: String,
-    val slug: String,
-    val gamesCount: Int,
-    val background_image: String
-)
