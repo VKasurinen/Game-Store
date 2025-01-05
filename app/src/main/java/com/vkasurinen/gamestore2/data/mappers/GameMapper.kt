@@ -61,7 +61,7 @@ fun GenreDto.toGenreEntity(): GenreEntity {
         name = name ?: "",
         slug = slug ?: "",
         games_count = games_count ?: 0,
-        background_image = background_image ?: "",
+        image_background = image_background ?: "",
         games = games.map { it.toGameEntity() }
 
     )
@@ -73,7 +73,7 @@ fun GenreEntity.toGenre(): Genre {
         name = name,
         slug = slug,
         gamesCount = games_count,
-        background_image = background_image,
+        image_background = image_background,
         games = games.map { it.toGame() }
     )
 }

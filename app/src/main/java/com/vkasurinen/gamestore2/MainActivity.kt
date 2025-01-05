@@ -53,26 +53,25 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Main.route) {
                             MainScreen(navController)
                         }
-//                        composable(
-//                            Screen.Details.route + "/{gameId}",
-//                            arguments = listOf(
-//                                navArgument("gameId") { type = NavType.IntType }
-//                            )
-//                        ) { backStackEntry ->
-//                            DetailsScreenRoot()
-//                        }
+                        composable(
+                            Screen.Details.route + "/{gameId}",
+                            arguments = listOf(
+                                navArgument("gameId") { type = NavType.IntType }
+                            )
+                        ) { backStackEntry ->
+                            DetailsScreenRoot()
+                        }
                     }
                 }
             }
         }
+        testGameListRepository()
     }
-
-
 
 
     private fun testGameListRepository() {
         CoroutineScope(Dispatchers.IO).launch {
-            gameListRepository.getGameList(forceFetchFromRemote = true, page = 1).collect { resource ->
+            gameListRepository.getAllGenres(forceFetchFromRemote = true).collect { resource ->
                 when (resource) {
                     is Resource.Loading<*> -> {
                         Log.d("MainActivity", "Loading data...")
@@ -89,8 +88,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        testGameListRepository()
     }
 
 

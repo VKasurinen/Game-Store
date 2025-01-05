@@ -5,6 +5,6 @@ data class GenreDto(
     val name: String?,
     val slug: String?,
     val games_count: Int?,
-    val background_image: String?,
+    val image_background: String?,
     val games: List<GameDto>
 )
