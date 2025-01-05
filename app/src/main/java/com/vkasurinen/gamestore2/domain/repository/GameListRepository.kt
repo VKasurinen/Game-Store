@@ -16,4 +16,6 @@ interface GameListRepository {
     suspend fun getGame(id: Int): Flow<Resource<Game>>
 
     suspend fun getAllGenres(forceFetchFromRemote: Boolean): Flow<Resource<List<Genre>>>
+
+    suspend fun getGamesByGenre(genre: String, page: Int): Flow<Resource<List<Game>>>
 }

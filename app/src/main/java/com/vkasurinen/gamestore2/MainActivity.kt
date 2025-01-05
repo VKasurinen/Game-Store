@@ -25,6 +25,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
 import com.vkasurinen.gamestore2.presentation.details.DetailsScreen
 import com.vkasurinen.gamestore2.presentation.details.DetailsScreenRoot
+import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreScreenRoot
 import com.vkasurinen.gamestore2.ui.theme.GameStore2Theme
 import com.vkasurinen.gamestore2.util.Resource
 import com.vkasurinen.gamestore2.util.Screen
@@ -61,6 +62,15 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             DetailsScreenRoot()
                         }
+                        composable(
+                            Screen.GamesByGenre.route + "/{genre}",
+                            arguments = listOf(
+                                navArgument("genre") { type = NavType.StringType }
+                            )
+                        ) { backStackEntry ->
+                            val genre = backStackEntry.arguments?.getString("genre") ?: ""
+                            GamesByGenreScreenRoot(navController, genre)
+                        }
                     }
                 }
             }
@@ -68,10 +78,9 @@ class MainActivity : ComponentActivity() {
         testGameListRepository()
     }
 
-
     private fun testGameListRepository() {
         CoroutineScope(Dispatchers.IO).launch {
-            gameListRepository.getAllGenres(forceFetchFromRemote = true).collect { resource ->
+            gameListRepository.getGamesByGenre("action", 10).collect { resource ->
                 when (resource) {
                     is Resource.Loading<*> -> {
                         Log.d("MainActivity", "Loading data...")
@@ -90,8 +99,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-
     @Composable
     private fun SetBarColor(color: Color) {
         val systemUiController = rememberSystemUiController()
@@ -100,5 +107,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-

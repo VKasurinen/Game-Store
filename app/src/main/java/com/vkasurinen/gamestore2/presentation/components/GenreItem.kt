@@ -70,7 +70,7 @@ fun GenreItem(
                 )
             )
             .clickable {
-                navHostController.navigate(Screen.Details.route + "/${genre.id}")
+                navHostController.navigate(Screen.GamesByGenre.route + "/${genre.slug}")
             }
     ) {
         if (resizedBitmap == null) {

@@ -23,19 +23,13 @@ class GenreListViewModel(
 
     fun onEvent(event: GenreListUiEvent) {
         when (event) {
-            GenreListUiEvent.Navigate -> {
-                _genreListState.update {
-                    it.copy(
-                        genreListPage = genreListState.value.genreListPage + 1
-                    )
-                }
+            is GenreListUiEvent.Navigate -> {
+                // Handle navigation event, if needed
             }
 
             is GenreListUiEvent.Paginate -> {
                 getGenreList(true)
             }
-
-            else -> {}
         }
     }
 
@@ -69,8 +63,6 @@ class GenreListViewModel(
                             it.copy(isLoading = result.isLoading)
                         }
                     }
-
-                    else -> {}
                 }
             }
         }

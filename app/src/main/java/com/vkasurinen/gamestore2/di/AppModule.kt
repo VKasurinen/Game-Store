@@ -7,6 +7,7 @@ import com.vkasurinen.gamestore2.data.repository.GameListRepositoryImpl
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
 import com.vkasurinen.gamestore2.presentation.details.DetailsViewModel
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
+import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreViewModel
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreListViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,5 +48,6 @@ val appModule = module {
 
     viewModel { GameListViewModel(get()) }
     viewModel { GenreListViewModel(get()) }
+    viewModel { GamesByGenreViewModel(get()) }
     viewModel { DetailsViewModel(get(), get()) }
 }

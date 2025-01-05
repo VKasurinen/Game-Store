@@ -146,4 +146,40 @@ class GameListRepositoryImpl(
             emit(Resource.Loading(false))
         }
     }
+
+    override suspend fun getGamesByGenre(
+        genre: String,
+        page: Int
+    ): Flow<Resource<List<Game>>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            val gameListFromApi = try {
+                gameApi.getGamesByGenre(genre = genre, page = page)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error loading games by genre"))
+                return@flow
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error loading games by genre"))
+                return@flow
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error loading games by genre"))
+                return@flow
+            }
+
+            val gameEntities = gameListFromApi.results.map { gameDto ->
+                gameDto.toGameEntity()
+            }
+
+            gameDatabase.gameDao.upsertGameList(gameEntities)
+
+            emit(Resource.Success(
+                gameEntities.map { it.toGame() }
+            ))
+            emit(Resource.Loading(false))
+        }
+    }
 }
