@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Gamepad
 import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,13 +30,13 @@ import com.vkasurinen.gamestore2.presentation.gamelist.GameScreenRoot
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreListViewModel
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreScreenRoot
 import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreScreenRoot
+import com.vkasurinen.gamestore2.presentation.home.HomeScreen
 import com.vkasurinen.gamestore2.util.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController) {
-
     val gameListViewModel: GameListViewModel = koinViewModel()
     val genreListViewModel: GenreListViewModel = koinViewModel()
     val gameListState = gameListViewModel.gameListState.collectAsState().value
@@ -49,10 +50,12 @@ fun MainScreen(navController: NavHostController) {
         TopAppBar(
             title = {
                 Text(
-                    text = if (gameListState.isCurrentGameScreen)
-                        "Games"
-                    else
-                        "Genres",
+                    text = when (bottomNavController.currentBackStackEntry?.destination?.route) {
+                        Screen.Home.route -> "Home"
+                        Screen.GameList.route -> "Games"
+                        Screen.GenreList.route -> "Genres"
+                        else -> "App"
+                    },
                     fontSize = 20.sp
                 )
             },
@@ -69,8 +72,11 @@ fun MainScreen(navController: NavHostController) {
         ) {
             NavHost(
                 navController = bottomNavController,
-                startDestination = Screen.GameList.route
+                startDestination = Screen.Home.route
             ) {
+                composable(Screen.Home.route) {
+                    HomeScreen()
+                }
                 composable(Screen.GameList.route) {
                     GameScreenRoot(
                         navController = navController,
@@ -104,6 +110,10 @@ fun BottomNavigationBar(
 
     val items = listOf(
         BottomItem(
+            "Home",
+            icon = Icons.Rounded.Home
+        ),
+        BottomItem(
             "Games",
             icon = Icons.Rounded.Gamepad
         ), BottomItem(
@@ -117,36 +127,32 @@ fun BottomNavigationBar(
     }
 
     NavigationBar {
-        Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)
-        ) {
+        Row(modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)) {
             items.forEachIndexed { index, bottomItem ->
-                NavigationBarItem(selected = selected.intValue == index, onClick = {
-                    selected.intValue = index
-                    when (selected.intValue) {
-                        0 -> {
-                            onEvent(GameListUiEvent.Navigate)
-                            bottomNavController.popBackStack()
-                            bottomNavController.navigate(Screen.GameList.route)
+                NavigationBarItem(
+                    selected = selected.intValue == index,
+                    onClick = {
+                        selected.intValue = index
+                        when (selected.intValue) {
+                            0 -> bottomNavController.navigate(Screen.Home.route)
+                            1 -> bottomNavController.navigate(Screen.GameList.route)
+                            2 -> bottomNavController.navigate(Screen.GenreList.route)
                         }
-
-                        1 -> {
-                            onEvent(GameListUiEvent.Navigate)
-                            bottomNavController.popBackStack()
-                            bottomNavController.navigate(Screen.GenreList.route)
-                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = bottomItem.icon,
+                            contentDescription = bottomItem.title,
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = bottomItem.title,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
-                }, icon = {
-                    Icon(
-                        imageVector = bottomItem.icon,
-                        contentDescription = bottomItem.title,
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }, label = {
-                    Text(
-                        text = bottomItem.title, color = MaterialTheme.colorScheme.onBackground
-                    )
-                })
+                )
             }
         }
     }
