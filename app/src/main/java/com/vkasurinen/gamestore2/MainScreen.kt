@@ -1,5 +1,3 @@
-package com.vkasurinen.gamestore2
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,14 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListUiEvent
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
 import com.vkasurinen.gamestore2.presentation.gamelist.GameScreenRoot
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreListViewModel
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreScreenRoot
+import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreScreenRoot
 import com.vkasurinen.gamestore2.util.Screen
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,7 +39,6 @@ fun MainScreen(navController: NavHostController) {
     val gameListViewModel: GameListViewModel = koinViewModel()
     val genreListViewModel: GenreListViewModel = koinViewModel()
     val gameListState = gameListViewModel.gameListState.collectAsState().value
-    //val genreListState = genreListViewModel.genreListState.collectAsState().value
     val bottomNavController = rememberNavController()
 
     Scaffold(bottomBar = {
@@ -50,9 +50,9 @@ fun MainScreen(navController: NavHostController) {
             title = {
                 Text(
                     text = if (gameListState.isCurrentGameScreen)
-                        stringResource(R.string.games)
+                        "Games"
                     else
-                        stringResource(R.string.genres),
+                        "Genres",
                     fontSize = 20.sp
                 )
             },
@@ -83,6 +83,15 @@ fun MainScreen(navController: NavHostController) {
                         viewModel = genreListViewModel
                     )
                 }
+                composable(
+                    Screen.GamesByGenre.route + "/{genre}",
+                    arguments = listOf(
+                        navArgument("genre") { type = NavType.StringType }
+                    )
+                ) { backStackEntry ->
+                    val genre = backStackEntry.arguments?.getString("genre") ?: ""
+                    GamesByGenreScreenRoot(navController, genre)
+                }
             }
         }
     }
@@ -95,10 +104,10 @@ fun BottomNavigationBar(
 
     val items = listOf(
         BottomItem(
-            title = stringResource(R.string.games),
+            "Games",
             icon = Icons.Rounded.Gamepad
         ), BottomItem(
-            title = stringResource(R.string.genres),
+            "Genres",
             icon = Icons.Rounded.Category
         )
     )

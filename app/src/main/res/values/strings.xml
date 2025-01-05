@@ -6,4 +6,5 @@
     <string name="language">Language</string>
     <string name="release_date">Release Date: </string>
     <string name="votes">Votes</string>
+    <string name="games2">Games</string>
 </resources>
