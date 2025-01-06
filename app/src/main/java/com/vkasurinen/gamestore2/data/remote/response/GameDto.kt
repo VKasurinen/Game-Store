@@ -21,6 +21,4 @@ data class GameDto(
     val saturated_color: String?,
     val dominant_color: String?,
     val genres: List<GenreDto>
-
-    ,
 )

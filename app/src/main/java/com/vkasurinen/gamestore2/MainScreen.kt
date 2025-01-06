@@ -4,16 +4,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.Gamepad
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,7 +36,7 @@ import com.vkasurinen.gamestore2.presentation.gamelist.GameScreenRoot
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreListViewModel
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreScreenRoot
 import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreScreenRoot
-import com.vkasurinen.gamestore2.presentation.home.HomeScreen
+import com.vkasurinen.gamestore2.presentation.home.HomeScreenRoot
 import com.vkasurinen.gamestore2.util.Screen
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,30 +47,58 @@ fun MainScreen(navController: NavHostController) {
     val genreListViewModel: GenreListViewModel = koinViewModel()
     val gameListState = gameListViewModel.gameListState.collectAsState().value
     val bottomNavController = rememberNavController()
+    var menuExpanded by remember { mutableStateOf(false) }
 
-    Scaffold(bottomBar = {
-        BottomNavigationBar(
-            bottomNavController = bottomNavController, onEvent = gameListViewModel::onEvent
-        )
-    }, topBar = {
-        TopAppBar(
-            title = {
-                Text(
-                    text = when (bottomNavController.currentBackStackEntry?.destination?.route) {
-                        Screen.Home.route -> "Home"
-                        Screen.GameList.route -> "Games"
-                        Screen.GenreList.route -> "Genres"
-                        else -> "App"
-                    },
-                    fontSize = 20.sp
+    Scaffold(
+
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = when (bottomNavController.currentBackStackEntry?.destination?.route) {
+                            Screen.Home.route -> "Home"
+                            Screen.GameList.route -> "Games"
+                            Screen.GenreList.route -> "Genres"
+                            else -> "App"
+                        },
+                        fontSize = 20.sp
+                    )
+                },
+
+                actions = {
+                    IconButton(onClick = { menuExpanded = true }) {
+                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
+                    }
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Profile") },
+                            onClick = { menuExpanded = false }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Settings") },
+                            onClick = { menuExpanded = false }
+                        )
+                    }
+                },
+
+                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
                 )
-            },
-            modifier = Modifier.shadow(2.dp),
-            colors = TopAppBarDefaults.topAppBarColors(
-                MaterialTheme.colorScheme.inverseOnSurface
             )
-        )
-    }) {
+        },
+
+        bottomBar = {
+            BottomNavigationBar(
+                bottomNavController = bottomNavController, onEvent = gameListViewModel::onEvent,)
+
+        },
+
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,7 +109,7 @@ fun MainScreen(navController: NavHostController) {
                 startDestination = Screen.Home.route
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen()
+                    HomeScreenRoot(navController = navController)
                 }
                 composable(Screen.GameList.route) {
                     GameScreenRoot(
@@ -126,8 +160,12 @@ fun BottomNavigationBar(
         mutableIntStateOf(0)
     }
 
-    NavigationBar {
-        Row(modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)) {
+    NavigationBar(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground
+    ) {
+        //0xFF1D2A38
+        Row(modifier = Modifier.background(Color.Transparent)) {
             items.forEachIndexed { index, bottomItem ->
                 NavigationBarItem(
                     selected = selected.intValue == index,

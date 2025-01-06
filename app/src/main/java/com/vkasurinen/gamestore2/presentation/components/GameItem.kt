@@ -19,23 +19,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Size
 import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.util.Screen
 import com.vkasurinen.gamestore2.util.getAverageColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import resizeBitmapFromUrl
-import java.net.URL
 
 @Composable
 fun GameItem(
@@ -45,6 +40,8 @@ fun GameItem(
     var resizedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     val defaultColor = MaterialTheme.colorScheme.secondaryContainer
     var dominantColor by remember { mutableStateOf(defaultColor) }
+
+    val painter = rememberAsyncImagePainter(model = game.background_image)
 
     LaunchedEffect(game.background_image) {
         withContext(Dispatchers.IO) {

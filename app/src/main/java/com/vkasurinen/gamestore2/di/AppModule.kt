@@ -9,6 +9,7 @@ import com.vkasurinen.gamestore2.presentation.details.DetailsViewModel
 import com.vkasurinen.gamestore2.presentation.gamelist.GameListViewModel
 import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreViewModel
 import com.vkasurinen.gamestore2.presentation.genrelist.GenreListViewModel
+import com.vkasurinen.gamestore2.presentation.home.HomeViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -49,5 +50,6 @@ val appModule = module {
     viewModel { GameListViewModel(get()) }
     viewModel { GenreListViewModel(get()) }
     viewModel { GamesByGenreViewModel(get()) }
+    viewModel { HomeViewModel(get()) }
     viewModel { DetailsViewModel(get(), get()) }
 }

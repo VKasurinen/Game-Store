@@ -1,4 +1,5 @@
 package com.vkasurinen.gamestore2.presentation.home
 
-class HomeUiEvent {
+sealed interface HomeUiEvent{
+    data object Navigate : HomeUiEvent
 }
