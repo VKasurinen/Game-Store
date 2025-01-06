@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImagePainter
@@ -32,6 +33,7 @@ import coil.size.Size
 import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.domain.model.Genre
 import com.vkasurinen.gamestore2.util.Screen
+import com.vkasurinen.gamestore2.util.calculateAverageColor
 import com.vkasurinen.gamestore2.util.getAverageColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,14 +45,26 @@ fun GenreItem(
     genre: Genre,
     navHostController: NavHostController
 ) {
-    var resizedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     val defaultColor = MaterialTheme.colorScheme.secondaryContainer
     var dominantColor by remember { mutableStateOf(defaultColor) }
 
-    LaunchedEffect(genre.image_background) {
-        if (!genre.image_background.isNullOrEmpty()) {
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(genre.image_background)
+            .size(Size.ORIGINAL)
+            .build()
+    )
+
+    val imageState = painter.state
+
+    LaunchedEffect(imageState) {
+        if (imageState is AsyncImagePainter.State.Success) {
             withContext(Dispatchers.IO) {
-                resizedBitmap = resizeBitmapFromUrl(genre.image_background, 200, 250)
+                val bitmap = imageState.result.drawable.toBitmap()
+                val averageColor = calculateAverageColor(bitmap)
+                withContext(Dispatchers.Main) {
+                    dominantColor = averageColor
+                }
             }
         }
     }
@@ -73,7 +87,7 @@ fun GenreItem(
                 navHostController.navigate(Screen.GamesByGenre.route + "/${genre.slug}")
             }
     ) {
-        if (resizedBitmap == null) {
+        if (imageState is AsyncImagePainter.State.Error) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,17 +104,13 @@ fun GenreItem(
                 )
             }
         } else {
-            dominantColor = getAverageColor(
-                imageBitmap = resizedBitmap!!.asImageBitmap()
-            )
-
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp)
                     .height(250.dp)
                     .clip(RoundedCornerShape(22.dp)),
-                bitmap = resizedBitmap!!.asImageBitmap(),
+                painter = painter,
                 contentDescription = genre.name,
                 contentScale = ContentScale.Crop
             )
@@ -121,7 +131,7 @@ fun GenreItem(
                 .fillMaxWidth()
                 .padding(start = 16.dp, bottom = 12.dp, top = 4.dp)
         ) {
-            // Here more items?
+            // Add any additional UI elements here, such as rating bars or other information
         }
     }
 }

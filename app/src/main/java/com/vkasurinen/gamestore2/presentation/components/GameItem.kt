@@ -15,18 +15,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.util.Screen
+import com.vkasurinen.gamestore2.util.calculateAverageColor
 import com.vkasurinen.gamestore2.util.getAverageColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -37,15 +43,27 @@ fun GameItem(
     game: Game,
     navHostController: NavHostController
 ) {
-    var resizedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     val defaultColor = MaterialTheme.colorScheme.secondaryContainer
     var dominantColor by remember { mutableStateOf(defaultColor) }
 
-    val painter = rememberAsyncImagePainter(model = game.background_image)
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(game.background_image)
+            .size(200)
+            .build()
+    )
 
-    LaunchedEffect(game.background_image) {
-        withContext(Dispatchers.IO) {
-            resizedBitmap = resizeBitmapFromUrl(game.background_image, 200, 250)
+    val imageState = painter.state
+
+    LaunchedEffect(imageState) {
+        if (imageState is AsyncImagePainter.State.Success) {
+            withContext(Dispatchers.IO) {
+                val bitmap = imageState.result.drawable.toBitmap()
+                val averageColor = calculateAverageColor(bitmap)
+                withContext(Dispatchers.Main) {
+                    dominantColor = averageColor
+                }
+            }
         }
     }
 
@@ -67,12 +85,13 @@ fun GameItem(
                 navHostController.navigate(Screen.Details.route + "/${game.id}")
             }
     ) {
-        if (resizedBitmap == null) {
+        if (imageState is AsyncImagePainter.State.Error) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp)
                     .height(250.dp)
+                    .width(250.dp)
                     .clip(RoundedCornerShape(22.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
@@ -84,17 +103,14 @@ fun GameItem(
                 )
             }
         } else {
-            dominantColor = getAverageColor(
-                imageBitmap = resizedBitmap!!.asImageBitmap()
-            )
-
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp)
                     .height(250.dp)
+                    .width(250.dp)
                     .clip(RoundedCornerShape(22.dp)),
-                bitmap = resizedBitmap!!.asImageBitmap(),
+                painter = painter,
                 contentDescription = game.name,
                 contentScale = ContentScale.Crop
             )
