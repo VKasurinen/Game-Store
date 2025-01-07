@@ -31,7 +31,7 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
             .data(game.background_image)
-            .size(200) // Resize the image to 200 pixels
+            .size(Size.ORIGINAL)
             .build()
     )
 
@@ -68,8 +68,8 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
             } else {
                 Image(
                     modifier = Modifier
-                        .width(300.dp)
-                        .height(250.dp)
+                        .width(225.dp)
+                        .height(175.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     painter = painter,
                     contentDescription = game.name,

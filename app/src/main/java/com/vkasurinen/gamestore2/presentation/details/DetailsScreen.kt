@@ -160,7 +160,7 @@ fun DetailsScreen(
                         Text(
                             modifier = Modifier.padding(start = 4.dp),
                             text = game.rating.toString().take(3),
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             maxLines = 1,

@@ -21,6 +21,7 @@ class HomeViewModel(
     init {
         getGenres()
         getGamesByGenre("racing") // Default genre
+        getTopGames() // Fetch top games
     }
 
     fun onEvent(event: HomeUiEvent) {
@@ -64,6 +65,31 @@ class HomeViewModel(
                             _homeState.update {
                                 it.copy(
                                     featuredGames = games,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                    }
+                    is Resource.Loading -> {
+                        _homeState.update { it.copy(isLoading = result.isLoading) }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getTopGames() {
+        viewModelScope.launch {
+            gameListRepository.getGameList(forceFetchFromRemote = false, page = 1).collectLatest { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _homeState.update { it.copy(isLoading = false) }
+                    }
+                    is Resource.Success -> {
+                        result.data?.let { games ->
+                            _homeState.update {
+                                it.copy(
+                                    topGames = games,
                                     isLoading = false
                                 )
                             }

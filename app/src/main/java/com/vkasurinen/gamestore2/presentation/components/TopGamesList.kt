@@ -1,5 +1,6 @@
 package com.vkasurinen.gamestore2.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +45,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.presentation.home.HomeState
 
@@ -81,6 +86,15 @@ fun TopGamesCard(games: List<Game>, navController: NavHostController) {
 
 @Composable
 fun GameRow(game: Game, navController: NavHostController) {
+
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(game.background_image)
+            .size(Size.ORIGINAL)
+            .build()
+    )
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,13 +105,14 @@ fun GameRow(game: Game, navController: NavHostController) {
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Game Image
-        AsyncImage(
-            model = game.background_image,
+
+        Image(
+            painter = painter,
             contentDescription = game.name,
             modifier = Modifier
                 .size(80.dp)
-                .padding(end = 8.dp)
+                .padding(end = 8.dp),
+            contentScale = ContentScale.Crop
         )
 
         Column(

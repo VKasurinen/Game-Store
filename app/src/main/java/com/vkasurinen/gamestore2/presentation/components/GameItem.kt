@@ -1,6 +1,5 @@
 package com.vkasurinen.gamestore2.presentation.components
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,10 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,13 +27,13 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import coil.size.Size
 import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.util.Screen
 import com.vkasurinen.gamestore2.util.calculateAverageColor
-import com.vkasurinen.gamestore2.util.getAverageColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import resizeBitmapFromUrl
+
 
 @Composable
 fun GameItem(
@@ -49,7 +46,7 @@ fun GameItem(
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
             .data(game.background_image)
-            .size(200)
+            .size(Size.ORIGINAL)
             .build()
     )
 

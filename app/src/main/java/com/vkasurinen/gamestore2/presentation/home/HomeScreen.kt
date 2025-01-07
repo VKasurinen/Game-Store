@@ -82,7 +82,7 @@ private fun HomeScreen(
             FeaturedGameSection(state.featuredGames, navHostController)
         }
 
-        TopGamesCard(games = state.featuredGames, navController = navHostController)
+        TopGamesCard(games = state.topGames, navController = navHostController)
         
     }
 }
@@ -97,7 +97,7 @@ fun GameCategories(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(bottom = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(genres) { genre ->
