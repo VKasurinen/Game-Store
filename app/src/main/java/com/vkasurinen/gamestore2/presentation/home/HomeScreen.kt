@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -36,6 +37,7 @@ import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.domain.model.Genre
 import com.vkasurinen.gamestore2.presentation.components.GameItem
 import com.vkasurinen.gamestore2.presentation.components.HomeScreenCard
+import com.vkasurinen.gamestore2.presentation.components.TopGamesCard
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -79,6 +81,9 @@ private fun HomeScreen(
         } else {
             FeaturedGameSection(state.featuredGames, navHostController)
         }
+
+        TopGamesCard(games = state.featuredGames, navController = navHostController)
+        
     }
 }
 
@@ -96,11 +101,19 @@ fun GameCategories(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(genres) { genre ->
+
             val backgroundColor = if (genre.slug == selectedGenre) {
                 Color(0xFF00C853)
             } else {
                 Color.Transparent
             }
+
+            val textColor = if (genre.slug == selectedGenre) {
+                Color.Black
+            } else {
+                MaterialTheme.colorScheme.onBackground
+            }
+
             Button(
                 onClick = {
                     selectedGenre = genre.slug
@@ -111,13 +124,13 @@ fun GameCategories(
                 modifier = Modifier
                     .border(
                         width = 1.dp,
-                        color = Color(0xFF163227),
+                        color = MaterialTheme.colorScheme.onBackground,
                         shape = RoundedCornerShape(18.dp)
                     )
             ) {
                 Text(
                     text = genre.name,
-                    color = Color.Black,
+                    color = textColor,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
@@ -125,40 +138,17 @@ fun GameCategories(
     }
 }
 
-//@Composable
-//fun GameCategories() {
-//    LazyRow(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(16.dp),
-//        horizontalArrangement = Arrangement.spacedBy(8.dp)
-//    ) {
-//        item {
-//            listOf("Action", "Adventure", "Shooter", "Family", "Racing").forEach { category ->
-//                Text(
-//                    text = category,
-//                    color = Color.Black,
-//                    modifier = Modifier
-//                        .background(
-//                            if (category == "Action") Color(0xFF00C853) else Color.Transparent,
-//                            RoundedCornerShape(16.dp)
-//                        )
-//                        .border(
-//                            width = 1.dp,
-//                            color = Color(0xFF102A21),
-//                            shape = RoundedCornerShape(20.dp)
-//                        )
-//                        .padding(horizontal = 16.dp, vertical = 8.dp)
-//                )
-//            }
-//        }
-//    }
-//}
-
 @Composable
 fun FeaturedGameSection(games: List<Game>, navHostController: NavHostController) {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        Text(text = "Our selection", color = Color.Black, style = MaterialTheme.typography.titleLarge)
+    Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+        Text(
+            text = "Our selection",
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyRow(
@@ -172,24 +162,6 @@ fun FeaturedGameSection(games: List<Game>, navHostController: NavHostController)
 }
 
 
-@Composable
-fun TopGamesList(games: List<Game>) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Top racing games", color = Color.White, style = MaterialTheme.typography.titleLarge)
-            Text(text = "See All", color = Color(0xFF00C853))
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(games) { game ->
-                GameItem(game = game, navHostController = rememberNavController())
-            }
-        }
-    }
-}
 
 @Preview(
     showBackground = true

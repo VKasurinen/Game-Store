@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -37,9 +38,16 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
     val imageState = painter.state
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onBackground,
+            shape = RoundedCornerShape(18.dp)
+        ),
+
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF0E161F))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         Column(modifier = Modifier) {
             if (imageState is AsyncImagePainter.State.Error) {
@@ -71,8 +79,7 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp)
+                    .padding(8.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -80,13 +87,15 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
                 ) {
                     Text(
                         text = game.name,
-                        color = Color(0xFF9DF6B3),
-                        style = MaterialTheme.typography.titleMedium
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
                     )
                     Text(
                         text = "⭐ ${game.rating}",
                         fontSize = 16.sp,
-                        color = Color.Yellow,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
 
@@ -98,9 +107,10 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
                 ) {
                     Box(
                         modifier = Modifier
+                            .wrapContentSize()
                             .border(
-                            width = 2.dp,
-                            color = Color(0xFF163227),
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onBackground,
                             shape = RoundedCornerShape(18.dp)
                         ),
                     ) {
@@ -110,7 +120,7 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
                             Icon(
                                 imageVector = Icons.Default.ArrowForward,
                                 contentDescription = "Go",
-                                tint = Color.White
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
