@@ -1,8 +1,10 @@
 package com.vkasurinen.gamestore2.presentation.home
 
+import HomeViewModel
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.tooling.preview.Preview
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +18,11 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +33,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.vkasurinen.gamestore2.R
 import com.vkasurinen.gamestore2.domain.model.Game
+import com.vkasurinen.gamestore2.domain.model.Genre
 import com.vkasurinen.gamestore2.presentation.components.GameItem
 import com.vkasurinen.gamestore2.presentation.components.HomeScreenCard
 import org.koin.androidx.compose.koinViewModel
@@ -36,8 +44,9 @@ fun HomeScreenRoot(
     navController: NavHostController,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
+    val state = viewModel.homeState.collectAsState().value
     HomeScreen(
-        state = viewModel.homeState.value,
+        state = state,
         onAction = viewModel::onEvent,
         navHostController = navController
     )
@@ -54,41 +63,97 @@ private fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        GameCategories()
-        FeaturedGameSection(state.featuredGames, navHostController)
+        GameCategories(
+            genres = state.genres,
+            onGenreSelected = { genre ->
+                onAction(HomeUiEvent.GenreSelected(genre))
+            }
+        )
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            FeaturedGameSection(state.featuredGames, navHostController)
+        }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun GameCategories() {
+fun GameCategories(
+    genres: List<Genre>,
+    onGenreSelected: (String) -> Unit
+) {
+    var selectedGenre by remember { mutableStateOf(genres.firstOrNull()?.slug ?: "") }
+
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        item {
-            listOf("Action", "Adventure", "Shooter", "Family", "Racing").forEach { category ->
+        items(genres) { genre ->
+            val backgroundColor = if (genre.slug == selectedGenre) {
+                Color(0xFF00C853)
+            } else {
+                Color.Transparent
+            }
+            Button(
+                onClick = {
+                    selectedGenre = genre.slug
+                    onGenreSelected(genre.slug)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFF163227),
+                        shape = RoundedCornerShape(18.dp)
+                    )
+            ) {
                 Text(
-                    text = category,
+                    text = genre.name,
                     color = Color.Black,
-                    modifier = Modifier
-                        .background(
-                            if (category == "Action") Color(0xFF00C853) else Color.Transparent,
-                            RoundedCornerShape(16.dp)
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = Color(0xFF102A21),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
     }
 }
+
+//@Composable
+//fun GameCategories() {
+//    LazyRow(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(16.dp),
+//        horizontalArrangement = Arrangement.spacedBy(8.dp)
+//    ) {
+//        item {
+//            listOf("Action", "Adventure", "Shooter", "Family", "Racing").forEach { category ->
+//                Text(
+//                    text = category,
+//                    color = Color.Black,
+//                    modifier = Modifier
+//                        .background(
+//                            if (category == "Action") Color(0xFF00C853) else Color.Transparent,
+//                            RoundedCornerShape(16.dp)
+//                        )
+//                        .border(
+//                            width = 1.dp,
+//                            color = Color(0xFF102A21),
+//                            shape = RoundedCornerShape(20.dp)
+//                        )
+//                        .padding(horizontal = 16.dp, vertical = 8.dp)
+//                )
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun FeaturedGameSection(games: List<Game>, navHostController: NavHostController) {

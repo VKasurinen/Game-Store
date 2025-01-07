@@ -97,10 +97,11 @@ fun HomeScreenCard(game: Game, navController: NavHostController) {
                     horizontalArrangement = Arrangement.End
                 ) {
                     Box(
-                        modifier = Modifier.border(
+                        modifier = Modifier
+                            .border(
                             width = 2.dp,
-                            color = Color.Gray,
-                            shape = RoundedCornerShape(20.dp)
+                            color = Color(0xFF163227),
+                            shape = RoundedCornerShape(18.dp)
                         ),
                     ) {
                         IconButton(onClick = {

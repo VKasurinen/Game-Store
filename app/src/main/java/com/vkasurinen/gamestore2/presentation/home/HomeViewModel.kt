@@ -1,8 +1,9 @@
-package com.vkasurinen.gamestore2.presentation.home
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vkasurinen.gamestore2.domain.model.Genre
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
+import com.vkasurinen.gamestore2.presentation.home.HomeState
+import com.vkasurinen.gamestore2.presentation.home.HomeUiEvent
 import com.vkasurinen.gamestore2.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,29 +19,51 @@ class HomeViewModel(
     val homeState = _homeState.asStateFlow()
 
     init {
-        getFeaturedGames()
+        getGenres()
+        getGamesByGenre("racing") // Default genre
     }
 
     fun onEvent(event: HomeUiEvent) {
         when(event) {
-            HomeUiEvent.Navigate -> TODO()
+            is HomeUiEvent.Navigate -> TODO()
+            is HomeUiEvent.GenreSelected -> getGamesByGenre(event.genre)
         }
     }
 
-    private fun getFeaturedGames() {
+    private fun getGenres() {
         viewModelScope.launch {
-            _homeState.update { it.copy(isLoading = true) }
+            gameListRepository.getAllGenres(false).collectLatest { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        // Handle error
+                    }
+                    is Resource.Success -> {
+                        result.data?.let { genres ->
+                            _homeState.update {
+                                it.copy(genres = genres)
+                            }
+                        }
+                    }
+                    is Resource.Loading -> {
+                        // Handle loading state
+                    }
+                }
+            }
+        }
+    }
 
-            gameListRepository.getGameList(false, 1).collectLatest { result ->
+    private fun getGamesByGenre(genre: String) {
+        viewModelScope.launch {
+            gameListRepository.getGamesByGenre(genre, 1).collectLatest { result ->
                 when (result) {
                     is Resource.Error -> {
                         _homeState.update { it.copy(isLoading = false) }
                     }
                     is Resource.Success -> {
-                        result.data?.let { gameList ->
+                        result.data?.let { games ->
                             _homeState.update {
                                 it.copy(
-                                    featuredGames = gameList,
+                                    featuredGames = games,
                                     isLoading = false
                                 )
                             }
