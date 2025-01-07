@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -92,13 +93,20 @@ fun GameCategories(
     genres: List<Genre>,
     onGenreSelected: (String) -> Unit
 ) {
-    var selectedGenre by remember { mutableStateOf(genres.firstOrNull()?.slug ?: "") }
+    var selectedGenre by remember { mutableStateOf("") }
+
+    LaunchedEffect(genres) {
+        if (genres.isNotEmpty()) {
+            selectedGenre = genres.first().slug
+            onGenreSelected(selectedGenre)
+        }
+    }
 
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = 4.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         items(genres) { genre ->
 
