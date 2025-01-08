@@ -6,5 +6,6 @@ data class GameListState(
     val isLoading: Boolean = false,
     val isCurrentGameScreen: Boolean = true,
     val gameListPage: Int = 1,
-    val gameList: List<Game> = emptyList()
+    val gameList: List<Game> = emptyList(),
+    val filteredGameList: List<Game> = emptyList()
 )

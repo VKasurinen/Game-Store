@@ -2,6 +2,7 @@ package com.vkasurinen.gamestore2.presentation.gamelist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vkasurinen.gamestore2.domain.model.Game
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
 import com.vkasurinen.gamestore2.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,9 @@ class GameListViewModel(
             is GameListUiEvent.Paginate -> {
                 getGameList(true)
             }
+            is GameListUiEvent.Search -> {
+                searchGames(event.query)
+            }
             else -> {}
         }
     }
@@ -58,6 +62,7 @@ class GameListViewModel(
                             _gameListState.update {
                                 it.copy(
                                     gameList = gameListState.value.gameList + gameList.shuffled(),
+                                    filteredGameList = gameListState.value.gameList + gameList.shuffled(),
                                     gameListPage = gameListState.value.gameListPage + 1
                                 )
                             }
@@ -70,6 +75,25 @@ class GameListViewModel(
                     }
                     else -> {}
                 }
+            }
+        }
+    }
+
+    private fun searchGames(query: String) {
+        viewModelScope.launch {
+            _gameListState.update {
+                it.copy(isLoading = true)
+            }
+
+            val filteredGames = gameListState.value.gameList.filter {
+                it.name.contains(query, ignoreCase = true)
+            }
+
+            _gameListState.update {
+                it.copy(
+                    filteredGameList = filteredGames,
+                    isLoading = false
+                )
             }
         }
     }

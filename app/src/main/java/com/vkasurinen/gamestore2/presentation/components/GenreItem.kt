@@ -37,7 +37,6 @@ import com.vkasurinen.gamestore2.util.calculateAverageColor
 import com.vkasurinen.gamestore2.util.getAverageColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import resizeBitmapFromUrl
 import java.net.URL
 
 @Composable

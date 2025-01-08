@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.Gamepad
 import androidx.compose.material.icons.rounded.Category
@@ -47,6 +49,7 @@ import com.vkasurinen.gamestore2.presentation.home.HomeScreenRoot
 import com.vkasurinen.gamestore2.util.Screen
 import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -61,15 +64,13 @@ fun MainScreen(navController: NavHostController) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = when (bottomNavController.currentBackStackEntry?.destination?.route) {
-                            Screen.Home.route -> "Home"
-                            Screen.GameList.route -> "Games"
-                            Screen.GenreList.route -> "Genres"
-                            else -> "App"
-                        },
-                        fontSize = 20.sp
-                    )
+                    IconButton(onClick = { /* Handle menu click */ }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menu",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 },
 
                 actions = {
