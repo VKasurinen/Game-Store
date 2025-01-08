@@ -156,7 +156,8 @@ fun GenreItemPreview() {
         updated = "2024-12-12T16:47:50",
         reviewsCount = 7058,
         saturatedColor = "#0f0f0f",
-        dominantColor = "#0f0f0f"
+        dominantColor = "#0f0f0f",
+        //genres = listOf()
     )
     val navController = rememberNavController()
     GameItem(game = game, navHostController = navController)

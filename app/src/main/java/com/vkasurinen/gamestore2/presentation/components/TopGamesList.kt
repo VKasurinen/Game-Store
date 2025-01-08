@@ -178,7 +178,8 @@ fun TopGamesListPreview() {
             updated = "2023-01-01T00:00:00",
             reviewsCount = 10,
             saturatedColor = "#FFFFFF",
-            dominantColor = "#000000"
+            dominantColor = "#000000",
+            //genres = listOf()
         ),
         Game(
             id = 2,
@@ -198,7 +199,8 @@ fun TopGamesListPreview() {
             updated = "2023-01-01T00:00:00",
             reviewsCount = 15,
             saturatedColor = "#FFFFFF",
-            dominantColor = "#000000"
+            dominantColor = "#000000",
+            //genres = listOf()
         )
     )
     TopGamesCard(

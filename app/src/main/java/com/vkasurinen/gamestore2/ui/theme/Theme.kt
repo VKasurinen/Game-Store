@@ -13,13 +13,15 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
-    secondary = PurpleGrey80,
+    //secondary = PurpleGrey80,
+    secondary = Green80,
     tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
-    secondary = PurpleGrey40,
+    //secondary = PurpleGrey40,
+    secondary = Green40,
     tertiary = Pink40
 
     /* Other default colors to override

@@ -19,4 +19,18 @@ class Converters {
         val type = object : TypeToken<List<GameEntity>>() {}.type
         return gson.fromJson(value, type)
     }
+
+    @TypeConverter
+    fun fromGenreList(genres: List<GenreEntity>): String {
+        val gson = Gson()
+        val type = object : TypeToken<List<GenreEntity>>() {}.type
+        return gson.toJson(genres, type)
+    }
+
+    @TypeConverter
+    fun toGenreList(genresString: String): List<GenreEntity> {
+        val gson = Gson()
+        val type = object : TypeToken<List<GenreEntity>>() {}.type
+        return gson.fromJson(genresString, type)
+    }
 }

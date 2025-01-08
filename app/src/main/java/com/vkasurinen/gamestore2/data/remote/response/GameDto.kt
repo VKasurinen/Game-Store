@@ -20,5 +20,5 @@ data class GameDto(
     val reviews_count: Int?,
     val saturated_color: String?,
     val dominant_color: String?,
-    val genres: List<GenreDto>
+    //val genres: List<GenreDto>?
 )

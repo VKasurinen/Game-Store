@@ -2,8 +2,10 @@ package com.vkasurinen.gamestore2.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 
 @Entity
+@TypeConverters(Converters::class)
 data class GameEntity(
     @PrimaryKey val id: Int,
     val slug: String,
@@ -23,7 +25,8 @@ data class GameEntity(
     val updated: String,
     val reviewsCount: Int,
     val saturatedColor: String,
-    val dominantColor: String
+    val dominantColor: String,
+    //val genres: List<GenreEntity> = emptyList()
 )
 
 //@Entity
