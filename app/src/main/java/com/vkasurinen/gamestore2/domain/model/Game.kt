@@ -19,5 +19,5 @@ data class Game(
     val reviewsCount: Int,
     val saturatedColor: String,
     val dominantColor: String,
-    //val genres: List<Genre>,
+    val genres: List<Genre>,
 )

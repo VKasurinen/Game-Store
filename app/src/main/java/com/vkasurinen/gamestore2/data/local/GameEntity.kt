@@ -26,7 +26,7 @@ data class GameEntity(
     val reviewsCount: Int,
     val saturatedColor: String,
     val dominantColor: String,
-    //val genres: List<GenreEntity> = emptyList()
+    val genres: List<GenreEntity> = emptyList()
 )
 
 //@Entity

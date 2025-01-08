@@ -179,7 +179,7 @@ fun TopGamesListPreview() {
             reviewsCount = 10,
             saturatedColor = "#FFFFFF",
             dominantColor = "#000000",
-            //genres = listOf()
+            genres = listOf()
         ),
         Game(
             id = 2,
@@ -200,7 +200,7 @@ fun TopGamesListPreview() {
             reviewsCount = 15,
             saturatedColor = "#FFFFFF",
             dominantColor = "#000000",
-            //genres = listOf()
+            genres = listOf()
         )
     )
     TopGamesCard(

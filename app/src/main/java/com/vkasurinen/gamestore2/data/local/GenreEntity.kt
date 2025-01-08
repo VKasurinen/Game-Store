@@ -10,5 +10,6 @@ data class GenreEntity(
     val slug: String,
     val games_count: Int,
     val image_background: String,
-    val games: List<GameEntity>
+    //val games: List<GameEntity>
+    val games: List<GameEntity> = emptyList()
 )

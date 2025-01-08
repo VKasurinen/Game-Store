@@ -130,7 +130,7 @@ fun DetailsScreen(
                             text = game.name,
                             fontSize = 19.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Green
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -170,8 +170,8 @@ fun DetailsScreen(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Rounded.Category,
                             title = "Genre",
-                            value = "sad"
-                            //value = state.game?.genres?.joinToString(", ") { it.name } ?: "No genres available"
+                            //value = "sad"
+                            value = state.game?.genres?.firstOrNull()?.name ?: "No genres available"
                         )
                     }
 

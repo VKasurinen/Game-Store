@@ -29,7 +29,7 @@ fun GameDto.toGameEntity(): GameEntity {
         reviewsCount = reviews_count ?: 0,
         saturatedColor = saturated_color ?: "",
         dominantColor = dominant_color ?: "",
-        //genres = genres?.map { it.toGenreEntity() } ?: emptyList()
+        genres = genres?.map { it.toGenreEntity() } ?: emptyList()
     )
 }
 
@@ -53,7 +53,7 @@ fun GameEntity.toGame(): Game {
         reviewsCount = reviewsCount,
         saturatedColor = saturatedColor,
         dominantColor = dominantColor,
-        //genres = genres.map { it.toGenre() }
+        genres = genres.map { it.toGenre() }
     )
 }
 
@@ -64,7 +64,7 @@ fun GenreDto.toGenreEntity(): GenreEntity {
         slug = slug ?: "",
         games_count = games_count ?: 0,
         image_background = image_background ?: "",
-        games = games.map { it.toGameEntity() } ?: emptyList()
+        games = games?.map { it.toGameEntity() } ?: emptyList()
     )
 }
 
