@@ -74,7 +74,7 @@ fun UtilityBox(
                     text = value,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.outline
+                    color = Color.Yellow
                 )
             }
 

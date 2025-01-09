@@ -13,3 +13,4 @@
 ### Scoreboard
 
 ![Genre Screen](GenreScreen.png)
+
