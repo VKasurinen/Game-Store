@@ -18,8 +18,8 @@ fun PagerIndicator(
     modifier: Modifier = Modifier,
     pagesSize: Int,
     selectedPage: Int,
-    selectedColor: Color = MaterialTheme.colorScheme.primary,
-    unselectedColor: Color = Color(0xFFA0A3BD),
+    selectedColor: Color = Color(0xFF15B2F1),
+    unselectedColor: Color = Color(0xFFCFEFFB),
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
         repeat(times = pagesSize) { page ->

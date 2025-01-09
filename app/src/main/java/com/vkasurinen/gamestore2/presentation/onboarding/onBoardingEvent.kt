@@ -1,4 +1,5 @@
 package com.vkasurinen.gamestore2.presentation.onboarding
 
-class onBoardingEvent {
+sealed interface onBoardingEvent {
+    data object NavigateToMainScreen : onBoardingEvent
 }

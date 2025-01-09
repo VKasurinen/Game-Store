@@ -21,6 +21,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vkasurinen.gamestore2.domain.repository.GameListRepository
 import com.vkasurinen.gamestore2.presentation.details.DetailsScreenRoot
 import com.vkasurinen.gamestore2.presentation.gamesbygenre.GamesByGenreScreenRoot
+import com.vkasurinen.gamestore2.presentation.onboarding.OnBoardingScreen
+import com.vkasurinen.gamestore2.presentation.onboarding.OnBoardingViewModel
+import com.vkasurinen.gamestore2.presentation.onboarding.onBoardingEvent
 import com.vkasurinen.gamestore2.util.Screen
 import com.vkasurinen.gamestore2.ui.theme.GameStore2Theme
 import com.vkasurinen.gamestore2.util.Resource
@@ -28,10 +31,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
     private val gameListRepository: GameListRepository by inject()
+
+    private val onBoardingViewModel: OnBoardingViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,11 +50,26 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Main.route
+                        startDestination = Screen.OnBoarding.route
                     ) {
+
+                        composable(Screen.OnBoarding.route) {
+                            OnBoardingScreen(
+                                onEvent = { event ->
+                                    onBoardingViewModel.onEvent(event)
+                                    if (event is onBoardingEvent.NavigateToMainScreen) {
+                                        navController.navigate(Screen.Main.route) {
+                                            popUpTo(Screen.OnBoarding.route) { inclusive = true }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
                         composable(Screen.Main.route) {
                             MainScreen(navController)
                         }
+
                         composable(
                             Screen.Details.route + "/{gameId}",
                             arguments = listOf(
